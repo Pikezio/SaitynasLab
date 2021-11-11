@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "mssql1": {
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/saitynaslabdbserver/databases/SaitynasLab_db",
+      "type": "mssql.azure",
+      "connectionId": "ConnectionStrings:DbConnectionString",
+      "secretStore": "AzureAppSettings"
+    }
+  }
+}

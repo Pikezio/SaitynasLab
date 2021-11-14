@@ -1,9 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SaitynasLab.Data.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace SaitynasLab.Data
 {
-    public class DemoRestContext : DbContext
+    public class DemoRestContext : IdentityDbContext
     {
         public DbSet<Concert> Concerts { get; set; }
         public DbSet<Song> Songs { get; set; }

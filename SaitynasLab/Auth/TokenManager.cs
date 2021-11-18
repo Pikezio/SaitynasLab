@@ -19,12 +19,16 @@ namespace SaitynasLab.Auth
     public class TokenManager : ITokenManager
     {
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly string _issuer;
+        private readonly string _audience;
         private SymmetricSecurityKey _authSigningKey;
 
         public TokenManager(IConfiguration configuration, UserManager<IdentityUser> userManager)
         {
             _authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]));
             _userManager = userManager;
+            _issuer = configuration["JWT:ValidIssuer"];
+            _audience = configuration["JWT:ValidAudience"];
         }
 
         public async Task<string> CreateAccessTokenAsync(IdentityUser user)
@@ -34,17 +38,20 @@ namespace SaitynasLab.Auth
 
             var authClaims = new List<Claim>
             {
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
                 new Claim(ClaimTypes.Name, user.UserName),
                 // Makes every token more unique
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim("userId", user.Id.ToString()),
+                //new Claim("UserId", user.Id.ToString()),
             };
 
             authClaims.AddRange(userRoles.Select(role => new Claim(ClaimTypes.Role, role)));
 
             // Creating the token
             var accessSecurityToken = new JwtSecurityToken(
-                expires: DateTime.UtcNow.AddHours(1),
+                issuer: _issuer,
+                audience: _audience,
+                expires: DateTime.UtcNow.AddHours(24),
                 claims: authClaims,
                 signingCredentials: new SigningCredentials(_authSigningKey, SecurityAlgorithms.HmacSha256));
 

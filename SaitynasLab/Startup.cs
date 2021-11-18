@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -30,8 +32,10 @@ namespace SaitynasLab
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            // !!!
-            services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<DemoRestContext>().AddDefaultTokenProviders();
+            services.AddDbContext<RestContext>(opt => opt.UseSqlServer(_configuration.GetConnectionString("Online")));
+            //opt => opt.ClaimsIdentity.UserIdClaimType = "UserId"
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<RestContext>().AddDefaultTokenProviders();
 
             services.AddAuthentication(options =>
             {
@@ -39,10 +43,17 @@ namespace SaitynasLab
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(options => {
+                options.TokenValidationParameters.ValidAudience = _configuration["JWT:ValidAudience"];
+                options.TokenValidationParameters.ValidIssuer = _configuration["JWT:ValidIssuer"];
                 options.TokenValidationParameters.IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
             });
 
-            services.AddDbContext<DemoRestContext>();
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("SameUser", policy => policy.Requirements.Add(new SameUserRequirement()));
+            });
+            services.AddSingleton<IAuthorizationHandler, SameUserAuthorizationHandler>();
+
             services.AddAutoMapper(typeof(Startup));
             services.AddControllers();
             services.AddTransient<IConcertRepository, ConcertRepository>();

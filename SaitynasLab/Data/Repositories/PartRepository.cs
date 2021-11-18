@@ -18,9 +18,9 @@ namespace SaitynasLab.Data.Repositories
 
     public class PartRepository : IPartRepository
     {
-        private readonly DemoRestContext _restContext;
+        private readonly RestContext _restContext;
 
-        public PartRepository(DemoRestContext restContext)
+        public PartRepository(RestContext restContext)
         {
             _restContext = restContext;
         }

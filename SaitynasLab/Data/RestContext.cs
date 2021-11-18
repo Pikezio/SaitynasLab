@@ -2,19 +2,19 @@
 using SaitynasLab.Data.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using AutoMapper.Configuration;
 
 namespace SaitynasLab.Data
 {
-    public class DemoRestContext : IdentityDbContext
+    public class RestContext : IdentityDbContext
     {
         public DbSet<Concert> Concerts { get; set; }
         public DbSet<Song> Songs { get; set; }
         public DbSet<Part> Parts { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        public RestContext(DbContextOptions<RestContext> options) : base(options)
         {
-            optionsBuilder.UseSqlServer(
-                "Data Source=tcp:saitynaslabdbserver.database.windows.net,1433;Initial Catalog=SaitynasLab_db;User Id=paukul@saitynaslabdbserver;Password=Saitynas123");
+
         }
     }
 }

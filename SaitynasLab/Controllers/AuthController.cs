@@ -49,7 +49,7 @@ namespace SaitynasLab.Controllers
                 return BadRequest("Could not create an user");
 
             // Assigns a role to the new user.
-            await _userManager.AddToRoleAsync(newUser, UserRoles.SimpleUser);
+            await _userManager.AddToRoleAsync(newUser, UserRoles.Musician);
 
             return CreatedAtAction(nameof(Register), _mapper.Map<UserDto>(newUser));
         }

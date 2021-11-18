@@ -18,9 +18,9 @@ namespace SaitynasLab.Data.Repositories
 
     public class SongRepository : ISongRepository
     {
-        private readonly DemoRestContext _restContext;
+        private readonly RestContext _restContext;
 
-        public SongRepository(DemoRestContext restContext)
+        public SongRepository(RestContext restContext)
         {
             _restContext = restContext;
         }
@@ -28,13 +28,17 @@ namespace SaitynasLab.Data.Repositories
         // Specific song from a specific concert
         public async Task<Song> GetAsync(int concertId, int songId)
         {
-            return await _restContext.Songs.FirstOrDefaultAsync(o => o.ConcertId == concertId && o.Id == songId);
+            //var concert = await _restContext.Concerts.FirstOrDefaultAsync(c => c.Id == concertId);
+            //var song = concert.Songs.FirstOrDefault(s => s.Id == songId);
+            var concerts = await _restContext.Concerts.Where(c => c.Id == concertId).ToListAsync();
+            return concerts.Where(c => c.Id == concertId).SelectMany(c => c.Songs).FirstOrDefault(s => s.Id == songId);
         }
 
         // All songs from a concert
         public async Task<List<Song>> GetAsync(int concertId)
         {
-            return await _restContext.Songs.Where(o => o.ConcertId == concertId).ToListAsync();
+            var songs = _restContext.Concerts.Where(c => c.Id == concertId).SelectMany(c => c.Songs).ToListAsync();
+            return await songs;
         }
 
         public async Task InsertAsync(Song song)

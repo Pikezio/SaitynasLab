@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using SaitynasLab.Data.Dtos;
 using SaitynasLab.Data.Entities;
 using System;
@@ -38,6 +39,14 @@ namespace SaitynasLab.Data
             CreateMap<Part, PartDto>();
             CreateMap<CreatePartDto, Part>();
             CreateMap<UpdatePartDto, Part>();
+        }
+    }
+
+    public class AuthProfile : Profile
+    {
+        public AuthProfile()
+        {
+            CreateMap<IdentityUser, UserDto>();
         }
     }
 }

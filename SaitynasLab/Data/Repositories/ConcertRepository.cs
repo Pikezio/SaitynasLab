@@ -18,40 +18,40 @@ namespace SaitynasLab.Data.Repositories
 
     public class ConcertRepository : IConcertRepository
     {
-        private readonly DemoRestContext restContext;
+        private readonly RestContext _restContext;
 
-        public ConcertRepository(DemoRestContext restContext)
+        public ConcertRepository(RestContext restContext)
         {
-            this.restContext = restContext;
+            _restContext = restContext;
         }
 
         public async Task<IEnumerable<Concert>> GetAsync()
         {
-            return await restContext.Concerts.ToListAsync();
+            return await _restContext.Concerts.ToListAsync();
         }
 
         public async Task<Concert> GetAsync(int id)
         {
-            return await restContext.Concerts.FirstOrDefaultAsync(o => o.Id == id);
+            return await _restContext.Concerts.FirstOrDefaultAsync(o => o.Id == id);
         }
 
         public async Task<Concert> InsertAsync(Concert concert)
         {
-            restContext.Concerts.Add(concert);
-            await restContext.SaveChangesAsync();
+            _restContext.Concerts.Add(concert);
+            var x = await _restContext.SaveChangesAsync();
             return concert;
         }
 
         public async Task UpdateAsync(Concert concert)
         {
-            restContext.Concerts.Update(concert);
-            await restContext.SaveChangesAsync();
+            _restContext.Concerts.Update(concert);
+            await _restContext.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(Concert concert)
         {
-            restContext.Concerts.Remove(concert);
-            await restContext.SaveChangesAsync();
+            _restContext.Concerts.Remove(concert);
+            await _restContext.SaveChangesAsync();
         }
     }
 }

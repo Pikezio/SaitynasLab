@@ -11,6 +11,8 @@ namespace SaitynasLab.Data.Entities
         public string Instrument { get; set; }
         public DateTime CreationDate { get; set; }
         public DateTime UpdatedDate { get; set; }
+
+        // Part belongs to a song
         public int SongId { get; set; }
         public Song Song { get; set; }
     }

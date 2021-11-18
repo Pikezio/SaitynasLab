@@ -29,6 +29,14 @@ namespace SaitynasLab.Data
                 }
             }
 
+            // Roles for testing
+            await CreateAdmin();
+            await CreateMusician();
+            await CreateCreator();
+        }
+
+        private async Task CreateAdmin()
+        {
             var newAdminUser = new IdentityUser
             {
                 UserName = "admin",
@@ -42,6 +50,44 @@ namespace SaitynasLab.Data
                 if (createAdminUserResult.Succeeded)
                 {
                     await _userManager.AddToRolesAsync(newAdminUser, UserRoles.All);
+                }
+            }
+        }
+
+        private async Task CreateMusician()
+        {
+            var newMusician = new IdentityUser
+            {
+                UserName = "musician",
+                Email = "musician@musician.com"
+            };
+
+            var existingMusician = await _userManager.FindByNameAsync(newMusician.UserName);
+            if (existingMusician == null)
+            {
+                var existingMusicianResult = await _userManager.CreateAsync(newMusician, "Password1!");
+                if (existingMusicianResult.Succeeded)
+                {
+                    await _userManager.AddToRoleAsync(newMusician, UserRoles.Musician);
+                }
+            }
+        }
+
+        private async Task CreateCreator()
+        {
+            var newCreator = new IdentityUser
+            {
+                UserName = "creator",
+                Email = "creator@creator.com"
+            };
+
+            var existingCreator = await _userManager.FindByNameAsync(newCreator.UserName);
+            if (existingCreator == null)
+            {
+                var existingCreatorResult = await _userManager.CreateAsync(newCreator, "Password1!");
+                if (existingCreatorResult.Succeeded)
+                {
+                    await _userManager.AddToRoleAsync(newCreator, UserRoles.Creator);
                 }
             }
         }

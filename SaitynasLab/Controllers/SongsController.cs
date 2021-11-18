@@ -33,6 +33,7 @@ namespace SaitynasLab.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin,Creator,Musician")]
         public async Task<ActionResult<List<SongDto>>> GetAll(int concertId)
         {
             // Check if concert exists
@@ -46,6 +47,7 @@ namespace SaitynasLab.Controllers
         }
 
         [HttpGet("{songId}")]
+        [Authorize(Roles = "Admin,Creator,Musician")]
         public async Task<ActionResult<SongDto>> Get(int songId, int concertId)
         {
             var concert = await _concertRepository.GetAsync(concertId);
@@ -77,6 +79,7 @@ namespace SaitynasLab.Controllers
         }
 
         [HttpPut("{songId}")]
+        [Authorize(Roles = "Admin,Creator")]
         public async Task<ActionResult<SongDto>> Put(int concertId, int songId, UpdateSongDto songDto)
         {
             var concert = await _concertRepository.GetAsync(concertId);
@@ -99,6 +102,7 @@ namespace SaitynasLab.Controllers
         }
 
         [HttpDelete("{songId}")]
+        [Authorize(Roles = "Admin,Creator")]
         public async Task<ActionResult> Delete(int songId, int concertId)
         {
             var song = await _songRepository.GetAsync(concertId, songId);

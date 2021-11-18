@@ -32,6 +32,13 @@ namespace SaitynasLab
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddTransient<IConcertRepository, ConcertRepository>();
+            services.AddTransient<ISongRepository, SongRepository>();
+            services.AddTransient<IPartRepository, PartRepository>();
+            services.AddTransient<ITokenManager, TokenManager>();
+            services.AddTransient<DatabaseSeeder, DatabaseSeeder>();
+            services.AddControllers();
+
             services.AddDbContext<RestContext>(opt => opt.UseSqlServer(_configuration.GetConnectionString("Online")));
             //opt => opt.ClaimsIdentity.UserIdClaimType = "UserId"
             services.AddIdentity<IdentityUser, IdentityRole>()
@@ -55,12 +62,6 @@ namespace SaitynasLab
             services.AddSingleton<IAuthorizationHandler, SameUserAuthorizationHandler>();
 
             services.AddAutoMapper(typeof(Startup));
-            services.AddControllers();
-            services.AddTransient<IConcertRepository, ConcertRepository>();
-            services.AddTransient<ISongRepository, SongRepository>();
-            services.AddTransient<IPartRepository, PartRepository>();
-            services.AddTransient<ITokenManager, TokenManager>();
-            services.AddTransient<DatabaseSeeder, DatabaseSeeder>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -72,6 +73,7 @@ namespace SaitynasLab
             }
 
             app.UseRouting();
+
             app.UseAuthentication();
             app.UseAuthorization();
 

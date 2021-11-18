@@ -21,7 +21,6 @@ namespace SaitynasLab.Data.Entities
         public DateTime CreationDate { get; set; }
 
         public string UserId { get; set; }
-        //public IdentityUser User { get; set; }
 
         // Concert has many Songs
         public ICollection<Song> Songs { get; set; }

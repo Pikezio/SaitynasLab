@@ -10,8 +10,8 @@ using SaitynasLab.Data;
 namespace SaitynasLab.Migrations
 {
     [DbContext(typeof(RestContext))]
-    [Migration("20211118105732_init")]
-    partial class init
+    [Migration("20211118163959_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -249,12 +249,9 @@ namespace SaitynasLab.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Concerts");
                 });
@@ -277,6 +274,9 @@ namespace SaitynasLab.Migrations
 
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -302,12 +302,9 @@ namespace SaitynasLab.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Songs");
                 });
@@ -378,42 +375,15 @@ namespace SaitynasLab.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("SaitynasLab.Data.Entities.Concert", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("SaitynasLab.Data.Entities.Part", b =>
                 {
                     b.HasOne("SaitynasLab.Data.Entities.Song", "Song")
-                        .WithMany("Parts")
+                        .WithMany()
                         .HasForeignKey("SongId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Song");
-                });
-
-            modelBuilder.Entity("SaitynasLab.Data.Entities.Song", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("SaitynasLab.Data.Entities.Song", b =>
-                {
-                    b.Navigation("Parts");
                 });
 #pragma warning restore 612, 618
         }

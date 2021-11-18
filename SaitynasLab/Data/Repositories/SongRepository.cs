@@ -28,10 +28,9 @@ namespace SaitynasLab.Data.Repositories
         // Specific song from a specific concert
         public async Task<Song> GetAsync(int concertId, int songId)
         {
-            //var concert = await _restContext.Concerts.FirstOrDefaultAsync(c => c.Id == concertId);
-            //var song = concert.Songs.FirstOrDefault(s => s.Id == songId);
-            var concerts = await _restContext.Concerts.Where(c => c.Id == concertId).ToListAsync();
-            return concerts.Where(c => c.Id == concertId).SelectMany(c => c.Songs).FirstOrDefault(s => s.Id == songId);
+            var songs = await _restContext.Concerts.Where(c => c.Id == concertId).SelectMany(c => c.Songs).ToListAsync();
+            var song = songs.FirstOrDefault(s => s.Id == songId);
+            return song;
         }
 
         // All songs from a concert

@@ -22,7 +22,8 @@ namespace SaitynasLab.Controllers
         private readonly IAuthorizationService _authorizationService;
         private readonly UserManager<IdentityUser> _userManager;
 
-        public ConcertsController(IConcertRepository concertRepository, IMapper mapper, IAuthorizationService authorizationService, UserManager<IdentityUser> userManager)
+        public ConcertsController(IConcertRepository concertRepository, IMapper mapper,
+            IAuthorizationService authorizationService, UserManager<IdentityUser> userManager)
         {
             _concertRepository = concertRepository;
             _mapper = mapper;
@@ -31,6 +32,7 @@ namespace SaitynasLab.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin,Creator,Musician")]
         public async Task<IEnumerable<ConcertDto>> GetAll()
         {
             var list = (await _concertRepository.GetAsync()).Select(o => _mapper.Map<ConcertDto>(o));
@@ -38,6 +40,7 @@ namespace SaitynasLab.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin,Creator,Musician")]
         public async Task<ActionResult<ConcertDto>> Get(int id)
         {
             var concert = await _concertRepository.GetAsync(id);
@@ -46,7 +49,7 @@ namespace SaitynasLab.Controllers
         }
 
         [HttpPost]
-        //[Authorize(Roles = UserRoles.Creator)]
+        [Authorize(Roles = "Admin,Creator")]
         public async Task<ActionResult<ConcertDto>> Post(CreateConcertDto concertDto)
         {
             var concert = _mapper.Map<Concert>(concertDto);
@@ -59,7 +62,7 @@ namespace SaitynasLab.Controllers
         }
 
         [HttpPut("{id}")]
-        //[Authorize(Roles = UserRoles.Creator)]
+        [Authorize(Roles = "Admin,Creator")]
         public async Task<ActionResult<ConcertDto>> Put(int id, UpdateConcertDto updatedConcert)
         {
             var concert =  await _concertRepository.GetAsync(id);
@@ -78,7 +81,7 @@ namespace SaitynasLab.Controllers
         }
 
         [HttpDelete("{id}")]
-        //[Authorize(Roles = UserRoles.Creator)]
+        [Authorize(Roles = "Admin,Creator")]
         public async Task<ActionResult<ConcertDto>> Delete(int id)
         {
             var concert = await _concertRepository.GetAsync(id);

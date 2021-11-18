@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace SaitynasLab.Auth
@@ -11,7 +13,7 @@ namespace SaitynasLab.Auth
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, SameUserRequirement requirement, 
             IUserOwnedResource resource)
         {
-            if (context.User.IsInRole(UserRoles.Admin) || context.User.FindFirst("UserId").Value == resource.UserId)
+            if (context.User.IsInRole(UserRoles.Admin) || context.User.FindFirst(ClaimTypes.NameIdentifier).Value == resource.UserId)
             {
                 context.Succeed(requirement);
             }

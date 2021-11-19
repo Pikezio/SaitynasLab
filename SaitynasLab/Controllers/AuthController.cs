@@ -72,7 +72,26 @@ namespace SaitynasLab.Controllers
 
             // Creating the token
             var accessToken = await _tokenManager.CreateAccessTokenAsync(user);
-            return Ok(new SuccessfulLoginDto(accessToken));
+            return Ok(accessToken);
+        }
+
+        [HttpPost]
+        [Route("refresh")]
+        public async Task<IActionResult> RefreshToken([FromBody] TokenRequest tokenRequest)
+        {
+            if (ModelState.IsValid)
+            {
+                var res = await _tokenManager.VerifyToken(tokenRequest);
+
+                if (res == null)
+                {
+                    return BadRequest();
+                }
+
+                return Ok(res);
+            }
+
+            return BadRequest();
         }
     }
 }

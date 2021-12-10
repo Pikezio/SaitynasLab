@@ -32,6 +32,13 @@ namespace SaitynasLab
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(builder =>
+                {
+                    builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+                });
+            });
             services.AddTransient<IConcertRepository, ConcertRepository>();
             services.AddTransient<ISongRepository, SongRepository>();
             services.AddTransient<IPartRepository, PartRepository>();
@@ -39,7 +46,7 @@ namespace SaitynasLab
             services.AddTransient<DatabaseSeeder, DatabaseSeeder>();
             services.AddControllers();
 
-            services.AddDbContext<RestContext>(opt => opt.UseSqlServer(_configuration.GetConnectionString("Online")));
+            services.AddDbContext<RestContext>(opt => opt.UseSqlServer(_configuration.GetConnectionString("Local")));
             //opt => opt.ClaimsIdentity.UserIdClaimType = "UserId"
             services.AddIdentity<IdentityUser, IdentityRole>()
                 .AddEntityFrameworkStores<RestContext>().AddDefaultTokenProviders();
@@ -73,6 +80,8 @@ namespace SaitynasLab
             }
 
             app.UseRouting();
+
+            app.UseCors();
 
             app.UseAuthentication();
             app.UseAuthorization();

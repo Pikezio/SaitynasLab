@@ -8,7 +8,6 @@ import SongForm from "../Song/SongForm";
 
 const ConcertPage = ({ token }) => {
   const navigate = useNavigate();
-  const [songs, setsongs] = useState(null);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
@@ -34,7 +33,7 @@ const ConcertPage = ({ token }) => {
     }
   );
 
-  const [{ data, loading, error }] = useAxios(
+  const [{ data, loading, error }, manualGet] = useAxios(
     {
       url: "http://localhost:1234/api/concerts/" + id,
       headers: {
@@ -46,27 +45,26 @@ const ConcertPage = ({ token }) => {
     }
   );
 
-  const [{ data: songsData, loading: songsLoading, error: songsError }] =
-    useAxios(
-      {
-        url: "http://localhost:1234/api/concerts/" + id + "/songs",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+  const [
+    { data: songsData, loading: songsLoading, error: songsError },
+    manualGetSongs,
+  ] = useAxios(
+    {
+      url: "http://localhost:1234/api/concerts/" + id + "/songs",
+      headers: {
+        Authorization: `Bearer ${token}`,
       },
-      {
-        useCache: false,
-      }
-    );
+    },
+    {
+      useCache: false,
+    }
+  );
 
   if (songsError) {
     return "Error getting songs.";
   }
   if (songsLoading) {
     return "Loading songs...";
-  }
-  if (songsData && songs == null) {
-    setsongs(songsData);
   }
   if (loading) {
     return "Loading...";
@@ -116,8 +114,8 @@ const ConcertPage = ({ token }) => {
         </div>
 
         <ul className="my-5 border-t-2 border-gray-300 w-3/4 h-screen">
-          {songs &&
-            songs.map((s, i) => (
+          {songsData &&
+            songsData.map((s, i) => (
               <Link to={`songs/${s.id}`}>
                 <div className="flex">
                   <div className="flex bg-gray-300 rounded-full h-11 w-11 font-bold text-xl pl-3 pt-2 my-3 mr-2">
@@ -143,7 +141,11 @@ const ConcertPage = ({ token }) => {
         </ul>
 
         {showUpdateModal && (
-          <ConcertUpdate token={token} toggleModal={toggleModal} />
+          <ConcertUpdate
+            token={token}
+            toggleModal={toggleModal}
+            manualGet={manualGet}
+          />
         )}
         {showDeleteModal && (
           <DeleteModal
@@ -156,6 +158,7 @@ const ConcertPage = ({ token }) => {
             token={token}
             setShowAddModal={setShowAddModal}
             concertId={id}
+            manualGetSongs={manualGetSongs}
           />
         )}
       </div>

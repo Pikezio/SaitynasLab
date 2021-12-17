@@ -20,12 +20,16 @@ const DeleteModal = ({ setShowDeleteModal, executeDelete }) => {
           <div className="flex flex-row items-center justify-between p-5 bg-white border-t border-gray-200 rounded-bl-lg rounded-br-lg">
             <button
               className="font-semibold text-gray-600"
-              onClick={() => setShowDeleteModal(false)}
+              onClick={() => {
+                setShowDeleteModal(false);
+              }}
             >
               Cancel
             </button>
             <button
-              onClick={() => executeDelete()}
+              onClick={() => {
+                executeDelete();
+              }}
               className={`rounded text-white bg-red-700 hover:bg-red-500 mt-4 lg:mt-0 mr-3 px-4 py-2`}
             >
               Delete

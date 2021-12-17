@@ -1,8 +1,10 @@
 import useAxios from "axios-hooks";
 import { React, useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
 const ConcertForm = ({ token, toggleModal }) => {
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -14,7 +16,7 @@ const ConcertForm = ({ token, toggleModal }) => {
     setOpen(false);
   }, []);
 
-  const [{ data, loading, error }, executePost] = useAxios(
+  const [{ loading, error, response }, executePost] = useAxios(
     {
       method: "POST",
       url: "http://localhost:1234/api/concerts",
@@ -34,9 +36,9 @@ const ConcertForm = ({ token, toggleModal }) => {
     });
   };
 
-  if (data) {
+  if (response) {
     toggleModal();
-    window.location.reload();
+    navigate("/concerts/" + response.data.id);
   }
 
   if (error) {

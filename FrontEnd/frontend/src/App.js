@@ -59,7 +59,10 @@ const App = () => {
             path="/login"
             element={<Login setToken={setToken} setLoggedIn={setLoggedIn} />}
           />
-          <Route path="/register" element={<Register />} />
+          <Route
+            path="/register"
+            element={<Register setToken={setToken} setLoggedIn={setLoggedIn} />}
+          />
         </Routes>
         <Footer />
       </>

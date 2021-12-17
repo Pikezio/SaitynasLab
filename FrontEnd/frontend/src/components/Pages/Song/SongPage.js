@@ -4,6 +4,7 @@ import { useParams } from "react-router";
 import { useNavigate } from "react-router-dom";
 import DeleteModal from "../DeleteModal";
 import SongUpdate from "./SongUpdate";
+import PartList from "../Part/PartList";
 
 const SongPage = ({ token }) => {
   const navigate = useNavigate();
@@ -29,12 +30,7 @@ const SongPage = ({ token }) => {
     }
   );
 
-  const [{ data: parts }] = useAxios({
-    url: songUrl + "/parts",
-    headers: header,
-  });
-
-  const [{ data, loading, error }] = useAxios(
+  const [{ data, loading, error }, manualGetSong] = useAxios(
     {
       url: songUrl,
       headers: header,
@@ -84,8 +80,8 @@ const SongPage = ({ token }) => {
           >
             Delete
           </button>
+          <PartList token={token} songId={songId} concertId={concertId} />
         </div>
-        <ul>{parts && parts.map((p) => <li key={p.id}>{p.instrument}</li>)}</ul>
         {showDeleteModal && (
           <DeleteModal
             setShowDeleteModal={setShowDeleteModal}
@@ -93,7 +89,11 @@ const SongPage = ({ token }) => {
           />
         )}
         {showUpdateModal && (
-          <SongUpdate token={token} setShowUpdateModal={setShowUpdateModal} />
+          <SongUpdate
+            token={token}
+            setShowUpdateModal={setShowUpdateModal}
+            manualGetSong={manualGetSong}
+          />
         )}
       </div>
     );

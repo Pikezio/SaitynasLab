@@ -1,6 +1,18 @@
 import React from "react";
+import useAxios from "axios-hooks";
+import { useNavigate } from "react-router-dom";
 
-const Register = () => {
+const Register = ({ setToken, setLoggedIn }) => {
+  const navigate = useNavigate();
+  const url = "http://localhost:1234/api/register";
+  const [{ data }, registerUser] = useAxios(
+    {
+      method: "POST",
+      url: url,
+    },
+    { manual: true }
+  );
+
   const handleFormSubmit = (e) => {
     e.preventDefault();
 
@@ -8,8 +20,18 @@ const Register = () => {
     let email = e.target.elements.email?.value;
     let password = e.target.elements.password?.value;
 
-    console.log(username, email, password);
+    registerUser({
+      data: {
+        username: username,
+        email: email,
+        password: password,
+      },
+    });
   };
+
+  if (data) {
+    navigate("/login");
+  }
 
   // Styles
   const classes = {

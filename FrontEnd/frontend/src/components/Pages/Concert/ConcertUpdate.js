@@ -3,7 +3,7 @@ import { React, useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router";
 
-const ConcertUpdate = ({ token, toggleModal }) => {
+const ConcertUpdate = ({ token, toggleModal, manualGet }) => {
   const { id } = useParams();
   const {
     register,
@@ -51,7 +51,7 @@ const ConcertUpdate = ({ token, toggleModal }) => {
 
   if (dataPut) {
     toggleModal();
-    window.location.reload();
+    manualGet();
   }
 
   if (error) {

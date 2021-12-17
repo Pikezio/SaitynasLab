@@ -3,7 +3,7 @@ import { React, useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router";
 
-const SongUpdate = ({ token, setShowUpdateModal }) => {
+const SongUpdate = ({ token, setShowUpdateModal, manualGetSong }) => {
   const {
     register,
     handleSubmit,
@@ -28,7 +28,7 @@ const SongUpdate = ({ token, setShowUpdateModal }) => {
     headers: header,
   });
 
-  const [{ data, loading, error }, executePost] = useAxios(
+  const [{ loading, error, response }, executePost] = useAxios(
     {
       method: "PUT",
       url: url,
@@ -50,9 +50,9 @@ const SongUpdate = ({ token, setShowUpdateModal }) => {
     setValue("titleField", oldInfo.title);
   }
 
-  if (data) {
+  if (response) {
     setShowUpdateModal(false);
-    window.location.reload();
+    manualGetSong();
   }
 
   if (error) {
